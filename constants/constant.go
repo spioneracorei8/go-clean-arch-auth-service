@@ -1,0 +1,24 @@
+package constants
+
+const (
+	// # source
+	SOURCE_WEB_APPLICATION    string = "WEB_APPLICATION"
+	SOURCE_MOBILE_APPLICATION string = "MOBILE_APPLICATION"
+	SOURCE_WEB_MANAGEMENT     string = "WEB_MANAGEMENT"
+)
+
+var AllowedSources = map[string]bool{
+	SOURCE_WEB_APPLICATION:    true,
+	SOURCE_MOBILE_APPLICATION: true,
+	SOURCE_WEB_MANAGEMENT:     true,
+}
+
+var (
+	MAP_SOURCE_TO_WEB_ACCESS = func() map[string]string {
+		return map[string]string{
+			SOURCE_WEB_APPLICATION:    WEB_ACCESS_APPLICATION,
+			SOURCE_MOBILE_APPLICATION: WEB_ACCESS_APPLICATION,
+			SOURCE_WEB_MANAGEMENT:     WEB_ACCESS_MANAGEMENT,
+		}
+	}
+)

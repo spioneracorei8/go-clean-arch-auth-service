@@ -1,4 +1,4 @@
-package constant
+package constants
 
 const (
 	// # account_status
@@ -11,9 +11,4 @@ const (
 	// # web_access
 	WEB_ACCESS_APPLICATION string = "APPLICATION"
 	WEB_ACCESS_MANAGEMENT  string = "MANAGEMENT"
-
-	// # source
-	SOURCE_WEB_APPLICATION    string = "WEB_APPLICATION"
-	SOURCE_MOBILE_APPLICATION string = "MOBILE_APPLICATION"
-	SOURCE_WEB_MANAGEMENT     string = "WEB_MANAGEMENT"
 )

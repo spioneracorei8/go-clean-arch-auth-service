@@ -1,0 +1,32 @@
+syntax = "proto3";
+option go_package="./proto_models";
+package proto;
+
+message RegisterUserObj {
+    string id_card_number = 1;
+    string title_name_th = 2;
+    string first_name_th = 3;
+    string last_name_th = 4;
+    string title_name_en = 5;
+    string first_name_en = 6;
+    string last_name_en = 7;
+    string mobile_phone = 8;
+    string office_phone = 9;
+    string email = 10;
+    string bod = 11;
+    string gender = 12;
+}
+
+message UserRequest {
+    string user_id = 1;
+    RegisterUserObj register_user = 2;
+
+}
+
+message userResponse {
+    string user_id = 1; 
+}
+
+service User {
+    rpc RegisterUser(UserRequest) returns (userResponse) {}
+}

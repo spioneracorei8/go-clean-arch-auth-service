@@ -13,7 +13,7 @@ import (
 
 // RUN MIGRATE TABLES
 /*
-go run "/home/spionera/Documents/me/code/go_clean_arch+msvcs/job-queue-user-service/migration/main.go"
+go run "/home/spionera/Documents/me/code/go_clean_arch+msvcs/job-queue-auth-service/migration/main.go"
 */
 func main() {
 	if err := godotenv.Load(); err != nil {

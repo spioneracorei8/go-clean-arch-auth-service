@@ -4,10 +4,11 @@ import (
 	my_logger "auth-service/logger"
 	"auth-service/middleware"
 	"auth-service/routes"
+	"auth-service/services/adapter/repository"
 	_register_handler "auth-service/services/register/handler"
 	_register_repo "auth-service/services/register/repository"
 	_register_us "auth-service/services/register/usecase"
-	"auth-service/services/user/repository"
+	_user_repo "auth-service/services/user/repository"
 	"fmt"
 	"net"
 	"net/http"
@@ -20,13 +21,16 @@ import (
 )
 
 type Server struct {
+	ROOT_PATH string
+
 	APP_PORT     string
 	GRPC_PORT    string
 	GRPC_TIMEOUT int
 
 	PSQL_CONNECTION string
 
-	SERVICE_CLIENT_USER_GRPC_ADDRESS string
+	SERVICE_CLIENT_USER_GRPC_ADDRESS    string
+	SERVICE_CLIENT_ADAPTER_GRPC_ADDRESS string
 }
 
 func connectDatabase(PSQL_CONNECTION string) *gorm.DB {
@@ -67,12 +71,13 @@ func (s *Server) Start() {
 	// # REPOSITORIES
 	//==============================================================
 	registerRepo := _register_repo.NewRegisterRepoImpl(database)
-	userRepo := repository.NewGrpcUserRepoImpl(s.SERVICE_CLIENT_USER_GRPC_ADDRESS, s.GRPC_TIMEOUT)
+	userRepo := _user_repo.NewGrpcUserRepoImpl(s.SERVICE_CLIENT_USER_GRPC_ADDRESS, s.GRPC_TIMEOUT)
+	adapterRepo := repository.NewGrpcAdapterRepositoryImpl(s.SERVICE_CLIENT_ADAPTER_GRPC_ADDRESS, s.GRPC_TIMEOUT)
 
 	//==============================================================
 	// # USECASES
 	//==============================================================
-	registerUs := _register_us.NewRegisterUsImpl(registerRepo, userRepo)
+	registerUs := _register_us.NewRegisterUsImpl(registerRepo, userRepo, adapterRepo, s.ROOT_PATH)
 
 	//==============================================================
 	// # HANDLERS

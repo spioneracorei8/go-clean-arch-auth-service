@@ -4,26 +4,33 @@ import (
 	"auth-service/constants"
 	"auth-service/helper"
 	"auth-service/models"
+	"auth-service/services/adapter"
 	"auth-service/services/register"
 	"auth-service/services/user"
+	"bytes"
 	"context"
 	"fmt"
+	"text/template"
 	"time"
 )
 
 type RegisterUsecase struct {
 	registerRepo register.RegisterRepository
 	userRepo     user.UserRepository
+	adapterRepo  adapter.GrpcAdapterRepository
+	ROOT_PATH    string
 }
 
-func NewRegisterUsImpl(registerRepo register.RegisterRepository, userRepo user.UserRepository) register.RegisterUsecase {
+func NewRegisterUsImpl(registerRepo register.RegisterRepository, userRepo user.UserRepository, adapterRepo adapter.GrpcAdapterRepository, ROOT_PATH string) register.RegisterUsecase {
 	return &RegisterUsecase{
 		registerRepo: registerRepo,
 		userRepo:     userRepo,
+		ROOT_PATH:    ROOT_PATH,
+		adapterRepo:  adapterRepo,
 	}
 }
 
-func (u *RegisterUsecase) RegisterUser(ctx context.Context, params map[string]any, source string) error {
+func (r *RegisterUsecase) RegisterUser(ctx context.Context, params map[string]any, source string) error {
 	var (
 		username string
 	)
@@ -38,7 +45,7 @@ func (u *RegisterUsecase) RegisterUser(ctx context.Context, params map[string]an
 	// ----------------------------
 
 	// ----------------------------
-	userId, err := u.userRepo.RegisterUser(params)
+	userId, err := r.userRepo.RegisterUser(params)
 	if err != nil {
 		return err
 	}
@@ -57,9 +64,49 @@ func (u *RegisterUsecase) RegisterUser(ctx context.Context, params map[string]an
 	account.CreatedAt = now
 	account.UpdatedAt = now
 
-	if err := u.registerRepo.CreateAccount(account); err != nil {
+	if err := r.registerRepo.CreateAccount(account); err != nil {
+		return err
+	}
+
+	var mail = new(models.MailForm)
+	mail.To = params["email"].(string)
+	mail.ToName = params["first_name_th"].(string) + " " + params["last_name_th"].(string)
+	mail.Subject = "สวัสดีครับท่าน"
+	mail.Body = ""
+	body, err := r.signUpSuccessTemplete(mail.ToName)
+	if err != nil {
+		return err
+	}
+	mail.Body = body
+
+	if _, err := r.adapterRepo.SendMail(mail); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (r *RegisterUsecase) signUpSuccessTemplete(name string) (string, error) {
+	type emailTemplete struct {
+		LOGO_URL string
+		NAME     string
+		REDIRECT string
+	}
+	tmpl := template.Must(template.ParseFiles("assets/email/sign_up_success.html"))
+	logoUrl := helper.GetENV("LOGO_URL", "")
+	callbackUrl := helper.GetENV("DOMAIN_APPLICATION_URL", "")
+
+	templeteData := &emailTemplete{
+		LOGO_URL: logoUrl,
+		NAME:     name,
+		REDIRECT: callbackUrl,
+	}
+
+	var tpl bytes.Buffer
+
+	if err := tmpl.Execute(&tpl, templeteData); err != nil {
+		return "", err
+	}
+
+	return tpl.String(), nil
 }

@@ -1,0 +1,18 @@
+syntax = "proto3";
+option go_package="./proto_models";
+package proto;
+
+message SendMailRequest {
+    string to = 1;
+    string to_name = 2;
+    string subject = 3;
+    string body = 4;
+}
+
+message SendMailResponse {
+    string message = 1;
+}
+
+service Adapter {
+    rpc SendMail(SendMailRequest) returns (SendMailResponse) {}
+}

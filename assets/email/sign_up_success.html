@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body
+    style="background-color: #f9f9f9; padding-top: 100px; padding-bottom: 100px"
+  >
+    <table
+      cellspacing="0"
+      cellpadding="0"
+      style="
+        border-radius: 12px;
+        min-height: 288px;
+        margin: auto;
+        width: 550px;
+        box-shadow: 0px 0px 2px rgba(40, 41, 61, 0.04),
+          0px 4px 8px rgba(96, 97, 112, 0.16);
+        overflow: hidden;
+      "
+    >
+      <tbody>
+        <tr style="height: 98px; background-color: #5989ff; width: 100%">
+          <td style="text-align: center">
+            <img width="200px" height="66px" src="{{.LOGO_URL}}" />
+          </td>
+        </tr>
+        <tr style="min-height: 288px; background-color: white">
+          <td style="vertical-align: top; padding: 32px">
+            <p
+              style="
+                text-align: center;
+                font-size: 18px;
+                font-weight: 900;
+                line-height: 24px;
+                letter-spacing: 0.024px;
+                color: #37373e;
+              "
+            >
+              คุณได้ทำการสมัครบัญชีเพื่อเข้าใช้งานระบบเสร็จสิ้น
+            </p>
+            <p
+              style="
+                text-align: center;
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 24px;
+                letter-spacing: 0.024px;
+                color: #555770;
+              "
+            >
+              ยินดีต้อนรับคุณ <span style="color: #28293d">{{.NAME}}</span
+              ><br />กด 'เข้าสู่ระบบ' เพื่อไปยังหน้าเข้าสู่ระบบ
+            </p>
+            <div style="text-align: center">
+              <a href="{{.REDIRECT}}" target="_blank">
+                <button
+                  type="button"
+                  style="
+                    border-radius: 6px;
+                    background-color: #1a3d93;
+                    border-style: none;
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: white;
+                    height: 34px;
+                    width: 102px;
+                  "
+                >
+                  เข้าสู่ระบบ
+                </button>
+              </a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

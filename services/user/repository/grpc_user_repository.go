@@ -23,7 +23,7 @@ func NewGrpcUserRepoImpl(grpcAddr string, timeout int) user.UserRepository {
 	}
 }
 
-func (r *grpcUserRepo) RegisterUser(params map[string]any) (*uuid.UUID, error) {
+func (r *grpcUserRepo) 	RegisterUser(params map[string]any) (*uuid.UUID, error) {
 	conn, err := grpc.NewClient(r.grpcAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
